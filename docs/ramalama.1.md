@@ -65,7 +65,7 @@ RamaLama supports multiple AI model registries types called transports. Supporte
 RamaLama defaults to the Hugging Face registry transport. This default can be overridden in the `ramalama.conf` file or by setting the `RAMALAMA_TRANSPORT`
 environment variable (e.g., `export RAMALAMA_TRANSPORT=ollama` to use the Ollama transport).
 
-Modify individual model transports by specifying the `huggingface://`, `oci://`, `ollama://`, `https://`, `http://`, `file://` prefix to the model.
+Modify individual model transports by specifying the `huggingface://`, `oci://`, `ollama://`, `https://`, `http://`, `file://` prefixes to the model.
 
 URL support means if a model is on a web site or even on your local system, you can run it directly.
 
@@ -185,7 +185,7 @@ although the recommended way is to use the ramalama.conf file.
 | RAMALAMA_IMAGE            | container image to use for serving AI Model|
 | RAMALAMA_IN_CONTAINER     | Run RamaLama in the default container      |
 | RAMALAMA_STORE            | location to store AI Models                |
-| RAMALAMA_TRANSPORT        | default AI Model transport (default: huggingface; options: ollama, huggingface, OCI) |
+| RAMALAMA_TRANSPORT        | default AI Model transport (options: huggingface, ollama, OCI; default: huggingface) |
 | TMPDIR                    | directory for temporary files. Defaults to /var/tmp if unset.|
 
 ## SEE ALSO

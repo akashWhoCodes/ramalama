@@ -191,9 +191,20 @@ def test_transport_factory_passes_scheme_to_get_chat_provider(monkeypatch):
 
 
 def test_transport_factory_default_transport():
-    """Verify TransportFactory defaults to the centralized DEFAULT_TRANSPORT constant."""
+    """Verify DEFAULT_TRANSPORT is wired into TransportFactory *and* affects transport selection."""
+    # Wiring: the factory picks up the shared default
     factory = TransportFactory("some-model", ARGS())
     assert factory.transport == DEFAULT_TRANSPORT
+
+    # Behavior: with no explicit transport, a HF-style model id should resolve
+    # to a Huggingface transport (and not an Ollama-style transport).
+    hf_style_model = "HuggingFaceH4/zephyr-7b-beta"
+
+    # Use the same code path the rest of the tests exercise to build a transport
+    # from a plain model string plus args.
+    transport = TransportFactory(hf_style_model, ARGS()).create()
+
+    assert isinstance(transport, Huggingface)
 
 
 def test_transport_factory_explicit_transport_override():

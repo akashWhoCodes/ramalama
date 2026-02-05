@@ -271,9 +271,9 @@ How to change transports.
 </summary>
 <br>
 
-Use the RAMALAMA_TRANSPORT environment variable to modify the default. `export RAMALAMA_TRANSPORT=ollama` Changes RamaLama to use ollama transport.
+Use the RAMALAMA_TRANSPORT environment variable to modify the default. `export RAMALAMA_TRANSPORT=ollama` changes RamaLama to use the Ollama transport.
 
-Individual model transports can be modified when specifying a model via the `huggingface://`, `oci://`, `modelscope://`, `ollama://`, or `rlcr://` prefix.
+Individual model transports can be modified when specifying a model via the `huggingface://`, `oci://`, `modelscope://`, `ollama://`, or `rlcr://` prefixes.
 
 Example:
 ```

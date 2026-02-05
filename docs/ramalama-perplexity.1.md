@@ -21,7 +21,7 @@ ramalama\-perplexity - calculate the perplexity value of an AI Model
 RamaLama defaults to the Hugging Face registry transport. This default can be overridden in the `ramalama.conf` file or by setting the `RAMALAMA_TRANSPORT`
 environment variable (e.g., `export RAMALAMA_TRANSPORT=ollama` to use the Ollama transport).
 
-Modify individual model transports by specifying the `huggingface://`, `oci://`, `ollama://`, `https://`, `http://`, `file://` prefix to the model.
+Modify individual model transports by specifying the `huggingface://`, `oci://`, `ollama://`, `https://`, `http://`, `file://` prefixes to the model.
 
 URL support means if a model is on a web site or even on your local system, you can run it directly.
 

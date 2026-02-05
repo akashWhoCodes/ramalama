@@ -23,7 +23,7 @@ RamaLama defaults to the Hugging Face registry transport. This default can be ov
 environment variable (e.g., `export RAMALAMA_TRANSPORT=ollama` to use the Ollama transport).
 
 Modify individual model transports by specifying the `huggingface://`, `oci://`, `ollama://`, `https://`, `http://`, `file://`, or hosted API
-prefix (`openai://`).
+prefixes (`openai://`).
 
 Hosted API transports connect directly to the remote provider and bypass the local container runtime. In this mode, flags that tune local
 containers (for example `--image`, GPU settings, or `--network`) do not apply, and the provider's own capabilities and security posture govern

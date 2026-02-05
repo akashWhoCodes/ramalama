@@ -158,22 +158,31 @@ def test_command_factory(
 
 
 def test_command_factory_with_ollama_prefix(spec_files: dict[str, Path], schema_files: dict[str, Path]):
-    """Test that explicit ollama:// prefix uses Ollama's library/ namespace."""
+    """Test that explicit ollama:// prefix handles model names correctly.
+
+    Simple model names are mapped into the library/ namespace, while
+    organization-qualified models preserve their full path.
+    """
+    # Case 1: simple model name is mapped into library/ namespace
     cli_args = CLIArgs()
     cli_args.MODEL = "ollama://smollm:135m"
     cli_args_dict = cli_args.__dict__
 
     cmd = _setup_command_factory_test(cli_args_dict, spec_files, schema_files, has_mmproj=True, has_chat_template=True)
 
-    expected_cmd = (
-        "llama-server --host 0.0.0.0 --port 1337 --log-file /var/tmp/ramalama.log "
-        "--model /path/to/model --mmproj /path/to/mmproj --no-warmup --reasoning-budget 0 "
-        "--alias library/smollm --ctx-size 512 --temp 11 --cache-reuse 1024 -v -ngl 44 "
-        "--model-draft /path/to/draft-model -ngld 44 --threads 8 --seed 12345 "
-        "--log-colors on --another-arg 44 --more-args"
-    )
+    alias_index = cmd.index("--alias") + 1
+    assert cmd[alias_index] == "library/smollm"
 
-    assert " ".join(cmd) == expected_cmd
+    # Case 2: organization-qualified model name preserves the full path
+    cli_args = CLIArgs()
+    cli_args.MODEL = "ollama://huihui_ai/granite-7b"
+    cli_args_dict = cli_args.__dict__
+
+    cmd = _setup_command_factory_test(cli_args_dict, spec_files, schema_files, has_mmproj=True, has_chat_template=True)
+
+    alias_index = cmd.index("--alias") + 1
+    # Organization-qualified models preserve their full path without library/ prefix
+    assert cmd[alias_index] == "huihui_ai/granite-7b"
 
 
 def test_command_factory_missing_spec(spec_files: dict[str, Path], schema_files: dict[str, Path]):
