@@ -78,6 +78,43 @@ class FactoryInput:
     has_chat_template: bool = True
 
 
+def _setup_command_factory_test(
+    cli_args: dict[str, any],
+    spec_files: dict[str, Path],
+    schema_files: dict[str, Path],
+    has_mmproj: bool = False,
+    has_chat_template: bool = True,
+) -> list[str]:
+    """Helper to set up CommandFactory test with mocked model and contexts."""
+    model = New(cli_args["MODEL"], argparse.Namespace(**cli_args))
+    mock_model = MagicMock()
+    mock_model.model_name = model.model_name
+    mock_model.model_tag = model.model_tag
+    mock_model.model_organization = model.model_organization
+    mock_model.model_alias = f"{model.model_organization}/{model.model_name}"
+
+    mock_model._get_entry_model_path.return_value = "/path/to/model"
+    mock_model._get_mmproj_path.return_value = "/path/to/mmproj" if has_mmproj else ""
+    mock_model._get_chat_template_path.return_value = "/path/to/chat-template" if has_chat_template else ""
+
+    mock_draft_model = MagicMock()
+    mock_draft_model._get_entry_model_path.return_value = "/path/to/draft-model"
+    mock_model.draft_model = mock_draft_model
+
+    model_ctx = RamalamaModelContext(
+        model=mock_model,
+        is_container=cli_args["container"],
+        should_generate=cli_args["generate"],
+        dry_run=cli_args["dry_run"],
+    )
+    func_ctx = RamalamaHostContext(cli_args["container"], True, True, True, None)
+    arg_ctx = RamalamaArgsContext.from_argparse(argparse.Namespace(**cli_args))
+    ctx = RamalamaCommandContext(arg_ctx, model_ctx, func_ctx)
+
+    factory = CommandFactory(spec_files, schema_files)
+    return factory.create(cli_args["runtime"], cli_args["subcommand"], ctx)
+
+
 @pytest.mark.parametrize(
     "input,expected_cmd",
     [
@@ -110,34 +147,7 @@ def test_command_factory(
     schema_files: dict[str, Path],
 ):
     cli_args = input.cli_args.__dict__
-
-    model = New(cli_args["MODEL"], argparse.Namespace(**cli_args))
-    mock_model = MagicMock()
-    mock_model.model_name = model.model_name
-    mock_model.model_tag = model.model_tag
-    mock_model.model_organization = model.model_organization
-    mock_model.model_alias = f"{model.model_organization}/{model.model_name}"
-
-    mock_model._get_entry_model_path.return_value = "/path/to/model"
-    mock_model._get_mmproj_path.return_value = "/path/to/mmproj" if input.has_mmproj else ""
-    mock_model._get_chat_template_path.return_value = "/path/to/chat-template" if input.has_chat_template else ""
-
-    mock_draft_model = MagicMock()
-    mock_draft_model._get_entry_model_path.return_value = "/path/to/draft-model"
-    mock_model.draft_model = mock_draft_model
-
-    model_ctx = RamalamaModelContext(
-        model=mock_model,
-        is_container=cli_args["container"],
-        should_generate=cli_args["generate"],
-        dry_run=cli_args["dry_run"],
-    )
-    func_ctx = RamalamaHostContext(cli_args["container"], True, True, True, None)
-    arg_ctx = RamalamaArgsContext.from_argparse(argparse.Namespace(**cli_args))
-    ctx = RamalamaCommandContext(arg_ctx, model_ctx, func_ctx)
-
-    factory = CommandFactory(spec_files, schema_files)
-    cmd = factory.create(cli_args["runtime"], cli_args["subcommand"], ctx)
+    cmd = _setup_command_factory_test(cli_args, spec_files, schema_files, input.has_mmproj, input.has_chat_template)
 
     print(" ".join(cmd))
     assert " ".join(cmd) == expected_cmd
@@ -149,33 +159,7 @@ def test_command_factory_with_ollama_prefix(spec_files: dict[str, Path], schema_
     cli_args.MODEL = "ollama://smollm:135m"
     cli_args_dict = cli_args.__dict__
 
-    model = New(cli_args_dict["MODEL"], argparse.Namespace(**cli_args_dict))
-    mock_model = MagicMock()
-    mock_model.model_name = model.model_name
-    mock_model.model_tag = model.model_tag
-    mock_model.model_organization = model.model_organization
-    mock_model.model_alias = f"{model.model_organization}/{model.model_name}"
-
-    mock_model._get_entry_model_path.return_value = "/path/to/model"
-    mock_model._get_mmproj_path.return_value = "/path/to/mmproj"
-    mock_model._get_chat_template_path.return_value = "/path/to/chat-template"
-
-    mock_draft_model = MagicMock()
-    mock_draft_model._get_entry_model_path.return_value = "/path/to/draft-model"
-    mock_model.draft_model = mock_draft_model
-
-    model_ctx = RamalamaModelContext(
-        model=mock_model,
-        is_container=cli_args_dict["container"],
-        should_generate=cli_args_dict["generate"],
-        dry_run=cli_args_dict["dry_run"],
-    )
-    func_ctx = RamalamaHostContext(cli_args_dict["container"], True, True, True, None)
-    arg_ctx = RamalamaArgsContext.from_argparse(argparse.Namespace(**cli_args_dict))
-    ctx = RamalamaCommandContext(arg_ctx, model_ctx, func_ctx)
-
-    factory = CommandFactory(spec_files, schema_files)
-    cmd = factory.create(cli_args_dict["runtime"], cli_args_dict["subcommand"], ctx)
+    cmd = _setup_command_factory_test(cli_args_dict, spec_files, schema_files, has_mmproj=True, has_chat_template=True)
 
     expected_cmd = (
         "llama-server --host 0.0.0.0 --port 1337 --log-file /var/tmp/ramalama.log "
