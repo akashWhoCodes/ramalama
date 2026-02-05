@@ -213,3 +213,14 @@ def test_transport_factory_explicit_transport_override():
     factory = TransportFactory("some-model", ARGS(), transport="ollama")
     assert factory.transport == "ollama"
     assert factory.transport != DEFAULT_TRANSPORT
+
+
+def test_transport_factory_ollama_uri_ignores_default():
+    """Verify ollama:// URIs resolve to Ollama transport even when default is Hugging Face."""
+    # Even with DEFAULT_TRANSPORT set to "huggingface", an explicit ollama:// URI
+    # should still resolve to an Ollama transport
+    ollama_model = "ollama://smollm:135m"
+    
+    transport = TransportFactory(ollama_model, ARGS()).create()
+    
+    assert isinstance(transport, Ollama)
