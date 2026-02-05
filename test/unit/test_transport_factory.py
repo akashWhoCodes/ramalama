@@ -187,3 +187,12 @@ def test_transport_factory_passes_scheme_to_get_chat_provider(monkeypatch):
     assert captured["scheme"] == "openai"
     assert isinstance(transport, APITransport)
     assert transport.provider is provider
+
+
+def test_transport_factory_default_transport():
+    """Verify TransportFactory defaults to the centralized DEFAULT_TRANSPORT constant."""
+    from ramalama.config import DEFAULT_TRANSPORT
+
+    factory = TransportFactory("some-model", ARGS())
+    assert factory.transport == DEFAULT_TRANSPORT
+    assert factory.transport == "huggingface"

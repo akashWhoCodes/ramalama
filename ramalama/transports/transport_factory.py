@@ -6,7 +6,7 @@ from urllib.parse import urlparse
 from ramalama.arg_types import StoreArgType
 from ramalama.chat_providers.api_providers import get_chat_provider
 from ramalama.common import rm_until_substring
-from ramalama.config import get_config
+from ramalama.config import DEFAULT_TRANSPORT, get_config
 from ramalama.path_utils import file_uri_to_path
 from ramalama.transports.api import APITransport
 from ramalama.transports.base import MODEL_TYPES, Transport
@@ -25,7 +25,7 @@ class TransportFactory:
         self,
         model: str,
         args: StoreArgType,
-        transport: str = "huggingface",
+        transport: str = DEFAULT_TRANSPORT,
         ignore_stderr: bool = False,
     ):
 
