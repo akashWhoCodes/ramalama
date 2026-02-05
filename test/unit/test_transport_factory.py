@@ -5,6 +5,7 @@ import pytest
 
 import ramalama.transports.transport_factory as transport_factory_module
 from ramalama.chat_providers.openai import OpenAIResponsesChatProvider
+from ramalama.config import DEFAULT_TRANSPORT
 from ramalama.transports.api import APITransport
 from ramalama.transports.huggingface import Huggingface
 from ramalama.transports.modelscope import ModelScope
@@ -191,16 +192,12 @@ def test_transport_factory_passes_scheme_to_get_chat_provider(monkeypatch):
 
 def test_transport_factory_default_transport():
     """Verify TransportFactory defaults to the centralized DEFAULT_TRANSPORT constant."""
-    from ramalama.config import DEFAULT_TRANSPORT
-
     factory = TransportFactory("some-model", ARGS())
     assert factory.transport == DEFAULT_TRANSPORT
 
 
 def test_transport_factory_explicit_transport_override():
     """Verify explicit transport argument overrides DEFAULT_TRANSPORT."""
-    from ramalama.config import DEFAULT_TRANSPORT
-
     # Test with explicit transport different from default
     factory = TransportFactory("some-model", ARGS(), transport="ollama")
     assert factory.transport == "ollama"

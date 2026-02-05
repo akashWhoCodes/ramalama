@@ -2,6 +2,7 @@ import argparse
 import os
 from dataclasses import dataclass, field
 from pathlib import Path
+from typing import Any
 from unittest.mock import MagicMock
 
 import pytest
@@ -79,7 +80,7 @@ class FactoryInput:
 
 
 def _setup_command_factory_test(
-    cli_args: dict[str, any],
+    cli_args: dict[str, Any],
     spec_files: dict[str, Path],
     schema_files: dict[str, Path],
     has_mmproj: bool = False,
@@ -137,6 +138,10 @@ def _setup_command_factory_test(
         (
             FactoryInput(cli_args=CLIArgs(max_tokens=99, runtime_args="")),
             "llama-server --host 0.0.0.0 --port 1337 --log-file /var/tmp/ramalama.log --model /path/to/model --chat-template-file /path/to/chat-template --jinja --no-warmup --reasoning-budget 0 --alias /smollm --ctx-size 512 --temp 11 --cache-reuse 1024 -v -ngl 44 --model-draft /path/to/draft-model -ngld 44 --threads 8 --seed 12345 --log-colors on -n 99",  # noqa: E501
+        ),
+        (
+            FactoryInput(cli_args=CLIArgs(MODEL="huihui-ai/granite-3.1-2b-instruct-abliterated")),
+            "llama-server --host 0.0.0.0 --port 1337 --log-file /var/tmp/ramalama.log --model /path/to/model --chat-template-file /path/to/chat-template --jinja --no-warmup --reasoning-budget 0 --alias huihui-ai/granite-3.1-2b-instruct-abliterated --ctx-size 512 --temp 11 --cache-reuse 1024 -v -ngl 44 --model-draft /path/to/draft-model -ngld 44 --threads 8 --seed 12345 --log-colors on --another-arg 44 --more-args",  # noqa: E501
         ),
     ],
 )
