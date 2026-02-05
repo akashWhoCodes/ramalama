@@ -45,7 +45,7 @@ class CLIArgs:
 
     runtime: str = "llama.cpp"
     subcommand: str = "serve"
-    MODEL: str = "ollama://smollm:135m"
+    MODEL: str = "smollm:135m"
     container: bool = True
     generate: bool = False
     dry_run: bool = False
@@ -83,23 +83,23 @@ class FactoryInput:
     [
         (
             FactoryInput(),
-            "llama-server --host 0.0.0.0 --port 1337 --log-file /var/tmp/ramalama.log --model /path/to/model --chat-template-file /path/to/chat-template --jinja --no-warmup --reasoning-budget 0 --alias library/smollm --ctx-size 512 --temp 11 --cache-reuse 1024 -v -ngl 44 --model-draft /path/to/draft-model -ngld 44 --threads 8 --seed 12345 --log-colors on --another-arg 44 --more-args",  # noqa: E501
+            "llama-server --host 0.0.0.0 --port 1337 --log-file /var/tmp/ramalama.log --model /path/to/model --chat-template-file /path/to/chat-template --jinja --no-warmup --reasoning-budget 0 --alias /smollm --ctx-size 512 --temp 11 --cache-reuse 1024 -v -ngl 44 --model-draft /path/to/draft-model -ngld 44 --threads 8 --seed 12345 --log-colors on --another-arg 44 --more-args",  # noqa: E501
         ),
         (
             FactoryInput(has_mmproj=True),
-            "llama-server --host 0.0.0.0 --port 1337 --log-file /var/tmp/ramalama.log --model /path/to/model --mmproj /path/to/mmproj --no-warmup --reasoning-budget 0 --alias library/smollm --ctx-size 512 --temp 11 --cache-reuse 1024 -v -ngl 44 --model-draft /path/to/draft-model -ngld 44 --threads 8 --seed 12345 --log-colors on --another-arg 44 --more-args",  # noqa: E501
+            "llama-server --host 0.0.0.0 --port 1337 --log-file /var/tmp/ramalama.log --model /path/to/model --mmproj /path/to/mmproj --no-warmup --reasoning-budget 0 --alias /smollm --ctx-size 512 --temp 11 --cache-reuse 1024 -v -ngl 44 --model-draft /path/to/draft-model -ngld 44 --threads 8 --seed 12345 --log-colors on --another-arg 44 --more-args",  # noqa: E501
         ),
         (
             FactoryInput(has_chat_template=False),
-            "llama-server --host 0.0.0.0 --port 1337 --log-file /var/tmp/ramalama.log --model /path/to/model --jinja --no-warmup --reasoning-budget 0 --alias library/smollm --ctx-size 512 --temp 11 --cache-reuse 1024 -v -ngl 44 --model-draft /path/to/draft-model -ngld 44 --threads 8 --seed 12345 --log-colors on --another-arg 44 --more-args",  # noqa: E501
+            "llama-server --host 0.0.0.0 --port 1337 --log-file /var/tmp/ramalama.log --model /path/to/model --jinja --no-warmup --reasoning-budget 0 --alias /smollm --ctx-size 512 --temp 11 --cache-reuse 1024 -v -ngl 44 --model-draft /path/to/draft-model -ngld 44 --threads 8 --seed 12345 --log-colors on --another-arg 44 --more-args",  # noqa: E501
         ),
         (
             FactoryInput(cli_args=CLIArgs(runtime_args="")),
-            "llama-server --host 0.0.0.0 --port 1337 --log-file /var/tmp/ramalama.log --model /path/to/model --chat-template-file /path/to/chat-template --jinja --no-warmup --reasoning-budget 0 --alias library/smollm --ctx-size 512 --temp 11 --cache-reuse 1024 -v -ngl 44 --model-draft /path/to/draft-model -ngld 44 --threads 8 --seed 12345 --log-colors on",  # noqa: E501
+            "llama-server --host 0.0.0.0 --port 1337 --log-file /var/tmp/ramalama.log --model /path/to/model --chat-template-file /path/to/chat-template --jinja --no-warmup --reasoning-budget 0 --alias /smollm --ctx-size 512 --temp 11 --cache-reuse 1024 -v -ngl 44 --model-draft /path/to/draft-model -ngld 44 --threads 8 --seed 12345 --log-colors on",  # noqa: E501
         ),
         (
             FactoryInput(cli_args=CLIArgs(max_tokens=99, runtime_args="")),
-            "llama-server --host 0.0.0.0 --port 1337 --log-file /var/tmp/ramalama.log --model /path/to/model --chat-template-file /path/to/chat-template --jinja --no-warmup --reasoning-budget 0 --alias library/smollm --ctx-size 512 --temp 11 --cache-reuse 1024 -v -ngl 44 --model-draft /path/to/draft-model -ngld 44 --threads 8 --seed 12345 --log-colors on -n 99",  # noqa: E501
+            "llama-server --host 0.0.0.0 --port 1337 --log-file /var/tmp/ramalama.log --model /path/to/model --chat-template-file /path/to/chat-template --jinja --no-warmup --reasoning-budget 0 --alias /smollm --ctx-size 512 --temp 11 --cache-reuse 1024 -v -ngl 44 --model-draft /path/to/draft-model -ngld 44 --threads 8 --seed 12345 --log-colors on -n 99",  # noqa: E501
         ),
     ],
 )
@@ -140,6 +140,51 @@ def test_command_factory(
     cmd = factory.create(cli_args["runtime"], cli_args["subcommand"], ctx)
 
     print(" ".join(cmd))
+    assert " ".join(cmd) == expected_cmd
+
+
+def test_command_factory_with_ollama_prefix(spec_files: dict[str, Path], schema_files: dict[str, Path]):
+    """Test that explicit ollama:// prefix uses Ollama's library/ namespace."""
+    cli_args = CLIArgs()
+    cli_args.MODEL = "ollama://smollm:135m"
+    cli_args_dict = cli_args.__dict__
+
+    model = New(cli_args_dict["MODEL"], argparse.Namespace(**cli_args_dict))
+    mock_model = MagicMock()
+    mock_model.model_name = model.model_name
+    mock_model.model_tag = model.model_tag
+    mock_model.model_organization = model.model_organization
+    mock_model.model_alias = f"{model.model_organization}/{model.model_name}"
+
+    mock_model._get_entry_model_path.return_value = "/path/to/model"
+    mock_model._get_mmproj_path.return_value = "/path/to/mmproj"
+    mock_model._get_chat_template_path.return_value = "/path/to/chat-template"
+
+    mock_draft_model = MagicMock()
+    mock_draft_model._get_entry_model_path.return_value = "/path/to/draft-model"
+    mock_model.draft_model = mock_draft_model
+
+    model_ctx = RamalamaModelContext(
+        model=mock_model,
+        is_container=cli_args_dict["container"],
+        should_generate=cli_args_dict["generate"],
+        dry_run=cli_args_dict["dry_run"],
+    )
+    func_ctx = RamalamaHostContext(cli_args_dict["container"], True, True, True, None)
+    arg_ctx = RamalamaArgsContext.from_argparse(argparse.Namespace(**cli_args_dict))
+    ctx = RamalamaCommandContext(arg_ctx, model_ctx, func_ctx)
+
+    factory = CommandFactory(spec_files, schema_files)
+    cmd = factory.create(cli_args_dict["runtime"], cli_args_dict["subcommand"], ctx)
+
+    expected_cmd = (
+        "llama-server --host 0.0.0.0 --port 1337 --log-file /var/tmp/ramalama.log "
+        "--model /path/to/model --mmproj /path/to/mmproj --no-warmup --reasoning-budget 0 "
+        "--alias library/smollm --ctx-size 512 --temp 11 --cache-reuse 1024 -v -ngl 44 "
+        "--model-draft /path/to/draft-model -ngld 44 --threads 8 --seed 12345 "
+        "--log-colors on --another-arg 44 --more-args"
+    )
+
     assert " ".join(cmd) == expected_cmd
 
 

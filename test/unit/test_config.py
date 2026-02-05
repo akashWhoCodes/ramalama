@@ -4,6 +4,7 @@ from unittest.mock import patch
 import pytest
 
 from ramalama.config import (
+    DEFAULT_TRANSPORT,
     BaseConfig,
     RamalamaImages,
     default_config,
@@ -52,7 +53,7 @@ def test_correct_config_defaults(monkeypatch):
     assert cfg.runtime == "llama.cpp"
     assert cfg.store == get_default_store()
     assert cfg.temp == "0.8"
-    assert cfg.transport == "huggingface"
+    assert cfg.transport == DEFAULT_TRANSPORT
     assert cfg.ocr is False
     assert cfg.verify is True
 

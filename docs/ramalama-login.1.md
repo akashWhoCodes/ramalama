@@ -9,7 +9,7 @@ ramalama\-login - login to remote registry
 ## DESCRIPTION
 login to remote model registry
 
-By default, RamaLama uses the Hugging Face registry transport. You can override this default by configuring the `ramalama.conf` file or setting the `RAMALAMA_TRANSPORT` environment variable. For example, `export RAMALAMA_TRANSPORT=ollama` changes RamaLama to use the Ollama transport. Ensure a registry transport is set before attempting to log in.
+By default, RamaLama uses the Hugging Face registry transport. You can override this default by configuring the `ramalama.conf` file or setting the `RAMALAMA_TRANSPORT` environment variable (e.g., `export RAMALAMA_TRANSPORT=ollama` to use the Ollama transport). Ensure a registry transport is set before attempting to log in.
 
 ## OPTIONS
 Options are specific to registry types.

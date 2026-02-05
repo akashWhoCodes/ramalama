@@ -22,8 +22,8 @@ registry if it does not exist in local storage.
 | rlcr          | rlcr://   | [`ramalama.com`](https://registry.ramalama.com) |
 |||Examples: [`quay.io`](https://quay.io),  [`Docker Hub`](https://docker.io),[`Artifactory`](https://artifactory.com)|
 
-RamaLama defaults to the Hugging Face registry transport. This default can be overridden in the `ramalama.conf` file or via the RAMALAMA_TRANSPORT
-environment variable. `export RAMALAMA_TRANSPORT=ollama` changes RamaLama to use the Ollama transport.
+RamaLama defaults to the Hugging Face registry transport. This default can be overridden in the `ramalama.conf` file or by setting the `RAMALAMA_TRANSPORT`
+environment variable (e.g., `export RAMALAMA_TRANSPORT=ollama` to use the Ollama transport).
 
 Modify individual model transports by specifying the `huggingface://`, `oci://`, `ollama://`, `https://`, `http://`, `file://` prefix to the model.
 

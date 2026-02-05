@@ -195,4 +195,13 @@ def test_transport_factory_default_transport():
 
     factory = TransportFactory("some-model", ARGS())
     assert factory.transport == DEFAULT_TRANSPORT
-    assert factory.transport == "huggingface"
+
+
+def test_transport_factory_explicit_transport_override():
+    """Verify explicit transport argument overrides DEFAULT_TRANSPORT."""
+    from ramalama.config import DEFAULT_TRANSPORT
+
+    # Test with explicit transport different from default
+    factory = TransportFactory("some-model", ARGS(), transport="ollama")
+    assert factory.transport == "ollama"
+    assert factory.transport != DEFAULT_TRANSPORT

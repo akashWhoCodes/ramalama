@@ -19,8 +19,8 @@ ramalama\-run - run specified AI Model as a chatbot
 |||Examples: [`quay.io`](https://quay.io),  [`Docker Hub`](https://docker.io),[`Artifactory`](https://artifactory.com)|
 | Hosted API Providers | openai:// | [`api.openai.com`](https://api.openai.com)|
 
-RamaLama defaults to the Hugging Face registry transport. This default can be overridden in the `ramalama.conf` file or via the RAMALAMA_TRANSPORT
-environment variable. `export RAMALAMA_TRANSPORT=ollama` changes RamaLama to use the Ollama transport.
+RamaLama defaults to the Hugging Face registry transport. This default can be overridden in the `ramalama.conf` file or by setting the `RAMALAMA_TRANSPORT`
+environment variable (e.g., `export RAMALAMA_TRANSPORT=ollama` to use the Ollama transport).
 
 Modify individual model transports by specifying the `huggingface://`, `oci://`, `ollama://`, `https://`, `http://`, `file://`, or hosted API
 prefix (`openai://`).
