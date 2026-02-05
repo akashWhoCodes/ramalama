@@ -149,7 +149,6 @@ def test_command_factory(
     cli_args = input.cli_args.__dict__
     cmd = _setup_command_factory_test(cli_args, spec_files, schema_files, input.has_mmproj, input.has_chat_template)
 
-    print(" ".join(cmd))
     assert " ".join(cmd) == expected_cmd
 
 

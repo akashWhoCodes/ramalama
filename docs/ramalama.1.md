@@ -185,7 +185,7 @@ although the recommended way is to use the ramalama.conf file.
 | RAMALAMA_IMAGE            | container image to use for serving AI Model|
 | RAMALAMA_IN_CONTAINER     | Run RamaLama in the default container      |
 | RAMALAMA_STORE            | location to store AI Models                |
-| RAMALAMA_TRANSPORT        | default AI Model transport (ollama, huggingface, OCI) |
+| RAMALAMA_TRANSPORT        | default AI Model transport (default: huggingface; options: ollama, huggingface, OCI) |
 | TMPDIR                    | directory for temporary files. Defaults to /var/tmp if unset.|
 
 ## SEE ALSO
