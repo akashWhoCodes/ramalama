@@ -70,7 +70,7 @@ DEFAULT_PORT_RANGE = _CONFIG.default_port_range
         ),
         ("ollama.com/library/granite-code", "granite-code", "latest", "library"),
         (
-            "huihui_ai/granite3.1-dense-abliterated:2b-instruct-fp16",
+            "ollama://huihui_ai/granite3.1-dense-abliterated:2b-instruct-fp16",
             "granite3.1-dense-abliterated",
             "2b-instruct-fp16",
             "huihui_ai",

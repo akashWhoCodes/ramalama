@@ -45,7 +45,7 @@ class CLIArgs:
 
     runtime: str = "llama.cpp"
     subcommand: str = "serve"
-    MODEL: str = "smollm:135m"
+    MODEL: str = "ollama://smollm:135m"
     container: bool = True
     generate: bool = False
     dry_run: bool = False
