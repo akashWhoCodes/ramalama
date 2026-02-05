@@ -52,7 +52,7 @@ def test_correct_config_defaults(monkeypatch):
     assert cfg.runtime == "llama.cpp"
     assert cfg.store == get_default_store()
     assert cfg.temp == "0.8"
-    assert cfg.transport == "ollama"
+    assert cfg.transport == "huggingface"
     assert cfg.ocr is False
     assert cfg.verify is True
 

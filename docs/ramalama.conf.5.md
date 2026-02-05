@@ -235,10 +235,10 @@ Enable thinking mode on reasoning models
 maximum number of cpu threads to use for inferencing
 The default -1, uses the default of the underlying implementation
 
-**transport**="ollama"
+**transport**="huggingface"
 
 Specify the default transport to be used for pulling and pushing of AI Models.
-Options: oci, ollama, huggingface.
+Options: oci, huggingface, ollama.
 RAMALAMA_TRANSPORT environment variable overrides this field.
 
 `[[ramalama.http_client]]`

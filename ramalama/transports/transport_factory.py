@@ -25,7 +25,7 @@ class TransportFactory:
         self,
         model: str,
         args: StoreArgType,
-        transport: str = "ollama",
+        transport: str = "huggingface",
         ignore_stderr: bool = False,
     ):
 

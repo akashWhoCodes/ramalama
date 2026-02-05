@@ -62,8 +62,8 @@ RamaLama supports multiple AI model registries types called transports. Supporte
 | OCI Container Registries | oci:// | [`opencontainers.org`](https://opencontainers.org)|
 |||Examples: [`quay.io`](https://quay.io),  [`Docker Hub`](https://docker.io),[`Artifactory`](https://artifactory.com)|
 
-RamaLama uses to the Ollama registry transport. This default can be overridden in the `ramalama.conf` file or via the RAMALAMA_TRANSPORTS
-environment. `export RAMALAMA_TRANSPORT=huggingface` Changes RamaLama to use huggingface transport.
+RamaLama defaults to the Hugging Face registry transport. This default can be overridden in the `ramalama.conf` file or via the RAMALAMA_TRANSPORT
+environment variable. `export RAMALAMA_TRANSPORT=ollama` changes RamaLama to use the Ollama transport.
 
 Modify individual model transports by specifying the `huggingface://`, `oci://`, `ollama://`, `https://`, `http://`, `file://` prefix to the model.
 

@@ -276,7 +276,7 @@ class BaseConfig:
     temp: str = "0.8"
     thinking: bool = True
     threads: int = -1
-    transport: str = "ollama"
+    transport: str = "huggingface"
     user: UserConfig = field(default_factory=UserConfig)
     verify: bool = True
     provider: ProviderConfig = field(default_factory=ProviderConfig)

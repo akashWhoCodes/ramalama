@@ -263,7 +263,7 @@ RamaLama supports multiple AI model registries types called transports.
 |                          |Examples: [`quay.io`](https://quay.io),  [`Docker Hub`](https://docker.io), [`Pulp`](https://pulpproject.org), and [`Artifactory`](https://jfrog.com/artifactory/)|
 
 ### Default Transport
-RamaLama uses the Ollama registry transport by default
+RamaLama uses the Hugging Face registry transport by default
 
 <details>
 <summary>
@@ -968,7 +968,7 @@ $ cat /usr/share/ramalama/shortnames.conf
     </summary>
     <br>
 
-    You can `pull` a model using the `pull` command. By default, it pulls from the <a href="https://ollama.com/library">Ollama registry</a>.
+    You can `pull` a model using the `pull` command. By default, it pulls from the <a href="https://huggingface.co">Hugging Face registry</a>.
     ```
     $ ramalama pull granite3-moe
     ```
@@ -1053,7 +1053,7 @@ $ cat /usr/share/ramalama/shortnames.conf
 
 - <details>
     <summary>
-        Run a chatbot on a model using the run command. By default, it pulls from the <a href="https://ollama.com/library">Ollama registry</a>.
+        Run a chatbot on a model using the run command. By default, it pulls from the <a href="https://huggingface.co">Hugging Face registry</a>.
     </summary>
     <br>
 
