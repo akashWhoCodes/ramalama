@@ -220,7 +220,28 @@ def test_transport_factory_ollama_uri_ignores_default():
     # Even with DEFAULT_TRANSPORT set to "huggingface", an explicit ollama:// URI
     # should still resolve to an Ollama transport
     ollama_model = "ollama://smollm:135m"
-    
+
     transport = TransportFactory(ollama_model, ARGS()).create()
-    
+
     assert isinstance(transport, Ollama)
+
+
+def test_transport_factory_default_transport_unqualified_model():
+    """Unqualified model IDs should still route through the default Huggingface transport."""
+    unqualified_model = "smollm:135m"
+
+    factory = TransportFactory(unqualified_model, ARGS())
+    assert factory.transport == DEFAULT_TRANSPORT
+
+    transport = factory.create()
+    assert isinstance(transport, Huggingface)
+
+
+def test_transport_factory_unknown_transport_raises():
+    """Unknown transport strings passed to TransportFactory should raise a clear error."""
+    with pytest.raises(KeyError, match="transport \"this-transport-does-not-exist\" not supported"):
+        TransportFactory(
+            "some-model",
+            ARGS(),
+            transport="this-transport-does-not-exist",
+        )
