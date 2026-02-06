@@ -254,7 +254,8 @@ def test_params_errors(extra_params, pattern, config, env_vars, expected_exit_co
 
 @pytest.mark.e2e
 def test_non_existing_model():
-    with RamalamaExecWorkspace() as ctx:
+    # Use RAMALAMA_TRANSPORT=ollama to test Ollama-specific error behavior
+    with RamalamaExecWorkspace(env_vars={"RAMALAMA_TRANSPORT": "ollama"}) as ctx:
         with pytest.raises(CalledProcessError) as exc_info:
             ctx.check_output(["ramalama", "serve", "NON_EXISTING_MODEL"], stderr=STDOUT)
         assert exc_info.value.returncode == 22
@@ -280,9 +281,11 @@ def test_nocontainer_and_name_flag_conflict():
 @pytest.mark.e2e
 @skip_if_no_container
 def test_full_model_name_expansion():
-    result = check_output(RAMALAMA_DRY_RUN + ["smollm"])
-    pattern = ".*ai.ramalama.model=ollama://library/smollm:latest"
-    assert re.search(pattern, result)
+    # Use RAMALAMA_TRANSPORT=ollama to test Ollama-specific model name expansion
+    with RamalamaExecWorkspace(env_vars={"RAMALAMA_TRANSPORT": "ollama"}) as ctx:
+        result = ctx.check_output(["ramalama", "-q", "--dryrun", "serve", "smollm"])
+        pattern = ".*ai.ramalama.model=ollama://library/smollm:latest"
+        assert re.search(pattern, result)
 
 
 @pytest.mark.e2e

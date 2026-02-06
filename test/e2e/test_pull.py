@@ -34,8 +34,9 @@ def test_pull_no_model():
 @pytest.mark.e2e
 @pytest.mark.distro_integration
 def test_pull_non_existing_model():
+    # Use RAMALAMA_TRANSPORT=ollama to test Ollama-specific error behavior
     random_model_name = f"non_existing_model_{''.join(random.choices(string.ascii_letters + string.digits, k=5))}"
-    with RamalamaExecWorkspace() as ctx:
+    with RamalamaExecWorkspace(env_vars={"RAMALAMA_TRANSPORT": "ollama"}) as ctx:
         with pytest.raises(CalledProcessError) as exc_info:
             ctx.check_output(["ramalama", "pull", random_model_name], stderr=STDOUT)
         assert exc_info.value.returncode == 22
